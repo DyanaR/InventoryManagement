@@ -7,4 +7,10 @@ class Product:
         self.quantity = quantity
         self.price = price
     
-        
+    def update_stock(self, new_quantity):
+        self.quantity = new_quantity
+        return self.quantity
+    
+    def adjust_price(self, new_price):
+        self.price = new_price
+        return self.price
