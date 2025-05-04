@@ -2,6 +2,7 @@
 from datetime import datetime
 from .product import Product
 from .transaction import Transaction
+from .user import User
 
 class Inventory:
     def __init__(self):
@@ -10,6 +11,8 @@ class Inventory:
         self.next_pid = 1
         self.transactions = {}
         self.next_tid = 1
+        self.users = {}
+        self.uid = 1
         
     def add_product(self, name, price, category, quantity):
         new_product = Product(self.next_pid, name, category, quantity, price)
@@ -75,7 +78,11 @@ class Inventory:
             total = product.price * product.quantity
         print(f"Inventory Total: ${total}")
         
-    def record_transaction(self, product_id, trans_quantity, trans_type):
+    def record_transaction(self, product_id, user_id, trans_quantity, trans_type):
+        user = self.users.get(user_id)
+        if not user:
+            print("User not found.")
+            return
         new_quantity = 0
         trans_type = trans_type.lower()
         # find the product thats being sold
@@ -93,9 +100,27 @@ class Inventory:
                 product.update_stock(new_quantity)
             # create a new Transaction
             current_datetime = datetime.now()
-            new_transaction = Transaction(self.next_tid, product_id, trans_quantity, trans_type, current_datetime)
+            new_transaction = Transaction(self.next_tid, product_id, user_id, trans_quantity, trans_type, current_datetime)
             # add it to transactions
             self.transactions[self.next_tid] = new_transaction
             self.next_tid += 1
         else:
             print("Item does not exist.")
+            
+    def add_user(self, username, role):
+        new_user = User(self.next_uid, username, role)
+        self.users[self.next_uid] = new_user
+        self.next_uid += 1 
+        
+    def list_all_users(self):
+        if not self.users:
+            print("No users found.")
+        else:
+            for user in self.users.values():
+                print(f"Username: {user.username}, Role: {user.role}")
+    
+    def remove_user(self, user_id):
+        try:
+            self.users.pop(user_id)
+        except KeyError:
+            print("User does not exist.")
