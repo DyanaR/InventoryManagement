@@ -1,17 +1,21 @@
 # Inventory manager class
+from datetime import datetime
 from .product import Product
+from .transaction import Transaction
 
 class Inventory:
     def __init__(self):
         # only set up the initial state 
         self.products = {}
-        self.next_id = 1
+        self.next_pid = 1
+        self.transactions = {}
+        self.next_tid = 1
         
     def add_product(self, name, price, category, quantity):
-        new_product = Product(self.next_id, name, category, quantity, price)
+        new_product = Product(self.next_pid, name, category, quantity, price)
         # new_product is stored in value as an object which is a reference in memory
-        self.products[self.next_id] = new_product
-        self.next_id += 1
+        self.products[self.next_pid] = new_product
+        self.next_pid += 1
     
     def remove_product(self, product_id):
         try:
@@ -70,3 +74,28 @@ class Inventory:
         for product in self.products.values():
             total = product.price * product.quantity
         print(f"Inventory Total: ${total}")
+        
+    def record_transaction(self, product_id, trans_quantity, trans_type):
+        new_quantity = 0
+        trans_type = trans_type.lower()
+        # find the product thats being sold
+        product = self.products.get(product_id)
+        # update the stock
+        if product:
+            if trans_type == "sale":
+                new_quantity = product.quantity - trans_quantity
+            else: # for purchase or return
+                new_quantity = product.quantity + trans_quantity
+            if new_quantity < 0:
+                print("Not enough stock.")
+                return # stops transaction from being created
+            else:
+                product.update_stock(new_quantity)
+            # create a new Transaction
+            current_datetime = datetime.now()
+            new_transaction = Transaction(self.next_tid, product_id, trans_quantity, trans_type, current_datetime)
+            # add it to transactions
+            self.transactions[self.next_tid] = new_transaction
+            self.next_tid += 1
+        else:
+            print("Item does not exist.")
