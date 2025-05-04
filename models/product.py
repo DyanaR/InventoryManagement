@@ -11,6 +11,6 @@ class Product:
         self.quantity = new_quantity
         return self.quantity
     
-    def adjust_price(self, new_price):
+    def update_price(self, new_price):
         self.price = new_price
         return self.price
