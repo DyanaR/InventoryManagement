@@ -21,11 +21,20 @@ root.columnconfigure(2, weight=1)
 
 
 # ** NAVBAR ***
-menu.add_cascade(label='Home')
-menu.add_cascade(label='Inventory')
-menu.add_cascade(label='Products')
-menu.add_cascade(label='Users')
+home_frame = tk.Frame(root)
+inventory_frame = tk.Frame(root)
+products_frame = tk.Frame(root)
+users_frame = tk.Frame(root)
 
+def show_frame(frame):
+    for f in (home_frame, inventory_frame, products_frame, users_frame):
+        f.grid_forget()  # hide all
+    frame.grid(row=1, column=0, columnspan=3, sticky="nsew")  # show selected
+
+menu.add_cascade(label='Home', command=lambda: show_frame(home_frame))
+menu.add_cascade(label='Inventory', command=lambda: show_frame(inventory_frame))
+menu.add_cascade(label='Products', command=lambda: show_frame(products_frame))
+menu.add_cascade(label='Users', command=lambda: show_frame(users_frame))
 
 # *** TESTING DATA ***
 inv.add_product("Test Product", 10.0, "Category A", 5)
@@ -55,19 +64,19 @@ def display_totals():
     total_users.config(text=result_total_users)
 
 # dyanmic labels
-total_products = tk.Label(root, text="")
+total_products = tk.Label(home_frame, text="")
 total_products.grid(row=0, column=0)
-total_value = tk.Label(root, text="")
+total_value = tk.Label(home_frame, text="")
 total_value.grid(row=0, column=1)
-total_users = tk.Label(root, text="")
+total_users = tk.Label(home_frame, text="")
 total_users.grid(row=0, column=2)
 
 # total labels
-total_products_label = tk.Label(root, text='Total Products')
+total_products_label = tk.Label(home_frame, text='Total Products')
 total_products_label.grid(row=1, column=0)
-total_value_label = tk.Label(root, text='Total Value')
+total_value_label = tk.Label(home_frame, text='Total Value')
 total_value_label.grid(row=1, column=1)
-total_users_label = tk.Label(root, text='Total Users')
+total_users_label = tk.Label(home_frame, text='Total Users')
 total_users_label.grid(row=1, column=2)
 
 # schedules funtion to run after a delay to display results automatically
@@ -75,7 +84,7 @@ root.after(1000, display_totals)
 
 
 # display recent transactions
-recent_transactions_frame = tk.Frame(root)
+recent_transactions_frame = tk.Frame(home_frame)
 recent_transactions_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
 scrollbar = Scrollbar(recent_transactions_frame, orient=VERTICAL)
@@ -87,7 +96,7 @@ recent_transactions_list.grid(row=3, column=0)
 
 scrollbar.config(command=recent_transactions_list.yview)
     
-recent_transactions_label = tk.Label(root, text="Recent Transactions:")
+recent_transactions_label = tk.Label(home_frame, text="Recent Transactions:")
 recent_transactions_label.grid(row=2, column=0, pady=(10, 0), sticky="w")
 
 def display_recent_transactions():
@@ -95,10 +104,10 @@ def display_recent_transactions():
     for transaction in result:
          recent_transactions_list.insert(0, f"Type: {transaction.transaction_type } | Time: {transaction.timestamp} | User: {transaction.user_id}")
 
-root.after(1000, display_recent_transactions)
+home_frame.after(1000, display_recent_transactions)
 
 # display recent added products
-recent_products_frame = tk.Frame(root)
+recent_products_frame = tk.Frame(home_frame)
 recent_products_frame.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
 
 product_scrollbar = Scrollbar(recent_products_frame, orient=VERTICAL)
@@ -113,7 +122,7 @@ recent_products_list = Listbox(
 recent_products_list.grid(row=0, column=0)
 product_scrollbar.config(command=recent_products_list.yview)
 
-recent_products_label = tk.Label(root, text="Recently Added Products:")
+recent_products_label = tk.Label(home_frame, text="Recently Added Products:")
 recent_products_label.grid(row=2, column=1, pady=(10, 0), sticky="w")
 
 def display_recent_products():
@@ -121,7 +130,7 @@ def display_recent_products():
     for product in result:
          recent_products_list.insert(0, f"{product.name } | Qty: {product.quantity} | Price: ${product.price}")
 
-root.after(1000, display_recent_products)
+home_frame.after(1000, display_recent_products)
 
-
+show_frame(home_frame)
 root.mainloop()
