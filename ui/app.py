@@ -1,6 +1,7 @@
 # handles window setup and navigation
 from tkinter import *
 import tkinter as tk
+from tkinter import ttk
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -11,6 +12,7 @@ from datetime import datetime
 inv = Inventory()
 root = tk.Tk()
 menu = Menu(root)
+entry = Entry(root)
 root.geometry("600x400")
 root.title('Inventory Management System')
 root.config(menu=menu)
@@ -131,6 +133,57 @@ def display_recent_products():
          recent_products_list.insert(0, f"{product.name } | Qty: {product.quantity} | Price: ${product.price}")
 
 home_frame.after(1000, display_recent_products)
+
+
+
+# ************ INVENTORY ***********
+inventory_left_frame = tk.Frame(inventory_frame)
+inventory_left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+inventory_buttons_frame = tk.Frame(inventory_left_frame)
+inventory_buttons_frame.grid(row=0, column=0)
+add_button = tk.Button(inventory_buttons_frame, text="Add", width=10, height=5)
+add_button.grid(row=0, column=0, padx=5)
+edit_button = tk.Button(inventory_buttons_frame, text="Edit", width=10, height=5)
+edit_button.grid(row=0, column=1, padx=5, pady=5)
+delete_button = tk.Button(inventory_buttons_frame, text="Delete", width=10, height=5)
+delete_button.grid(row=0, column=2, padx=5)
+
+product_details_frame = tk.Frame(inventory_left_frame)
+product_details_frame.grid(row=1, column=0)
+product_details_label = tk.Label(product_details_frame, text="Product Details")
+product_details_label.grid(row=0, column=0)
+product_name_label = tk.Label(product_details_frame, text="Product Name")
+product_name_label.grid(row=1, column=0)
+product_name_entry = tk.Entry(product_details_frame)
+product_name_entry.grid(row=1, column=1)
+product_category_label = tk.Label(product_details_frame, text="Product Category")
+product_category_label.grid(row=2, column=0)
+product_category_combobox = ttk.Combobox(product_details_frame, values=["Drinks", "Food", "Sweets"])
+product_category_combobox.set("Select category")
+product_category_combobox.grid(row=2, column=1)
+
+
+inventory_list_frame = tk.Frame(inventory_frame)
+inventory_list_frame.grid(row=0, column=1)
+search_entry = Entry(inventory_list_frame) 
+search_entry.grid(row=0, column=0, padx=5)
+search_button = tk.Button(inventory_list_frame, text="Search", width=10)
+search_button.grid(row=0, column=1, padx=5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 show_frame(home_frame)
 root.mainloop()
