@@ -12,7 +12,7 @@ class Inventory:
         self.transactions = {}
         self.next_tid = 1
         self.users = {}
-        self.uid = 1
+        self.next_uid = 1
         
     def add_product(self, name, price, category, quantity):
         new_product = Product(self.next_pid, name, category, quantity, price)
@@ -70,14 +70,16 @@ class Inventory:
     
     def total_inventory_count(self):
         inv_count = len(self.products)
-        print(f"Total Inventory: {inv_count}")
+        #print(f"Total Inventory: {inv_count}")
+        return inv_count
     
     def total_inventory_value(self):
         total = 0
         for product in self.products.values():
             total = product.price * product.quantity
-        print(f"Inventory Total: ${total}")
-        
+        #print(f"Inventory Total: ${total}")
+        return total
+    
     def record_transaction(self, product_id, user_id, trans_quantity, trans_type):
         user = self.users.get(user_id)
         if not user:
@@ -112,15 +114,19 @@ class Inventory:
         self.users[self.next_uid] = new_user
         self.next_uid += 1 
         
+    def remove_user(self, user_id):
+        try:
+            self.users.pop(user_id)
+        except KeyError:
+            print("User does not exist.")
+            
     def list_all_users(self):
         if not self.users:
             print("No users found.")
         else:
             for user in self.users.values():
                 print(f"Username: {user.username}, Role: {user.role}")
-    
-    def remove_user(self, user_id):
-        try:
-            self.users.pop(user_id)
-        except KeyError:
-            print("User does not exist.")
+                
+    def total_user_count(self):
+        total = len(self.users)
+        return total
