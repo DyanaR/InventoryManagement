@@ -109,6 +109,23 @@ class Inventory:
         else:
             print("Item does not exist.")
             
+    def recent_transactions(self):
+        recent = [] # to store multiple transactions
+        # reversed b/c we want the most recent
+        for transaction in reversed(self.transactions.values()):
+            recent.append(transaction)
+            if len(recent) >= 10:
+                break 
+        return recent
+    
+    def recent_products(self):
+        recent = []
+        for product in reversed(self.products.values()):
+            recent.append(product)
+            if len(recent) >= 10:
+                break
+        return recent
+            
     def add_user(self, username, role):
         new_user = User(self.next_uid, username, role)
         self.users[self.next_uid] = new_user
